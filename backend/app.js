@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
-
+app.use('/maps', mapsRoutes);
 
 
 
