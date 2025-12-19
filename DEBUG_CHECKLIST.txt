@@ -1,0 +1,35 @@
+🔍 DEBUG CHECKLIST - Share These Outputs:
+
+1. BACKEND TERMINAL OUTPUT (when ride is created):
+   Copy and paste everything from the moment you click "Create Ride"
+   
+2. CAPTAIN BROWSER CONSOLE (F12 → Console tab):
+   - Is there "Connected to server"?
+   - Is there "New ride received: ..."?
+   - Any errors?
+   
+3. USER BROWSER CONSOLE (F12 → Console tab):
+   - Any errors when creating ride?
+   - What is the response from /rides/create?
+   
+4. NETWORK TAB (F12 → Network):
+   - Find the /rides/create request
+   - Click on it
+   - What is the Response?
+   - What is the Status Code?
+
+5. TEST THIS:
+   In Captain browser console, type:
+   
+   localStorage.getItem('token')
+   
+   Does it show a token?
+
+6. TEST THIS TOO:
+   In User browser console, type:
+   
+   localStorage.getItem('token')
+   
+   Does it show a token?
+
+Without these outputs, I cannot help you further.
