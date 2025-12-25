@@ -79,7 +79,7 @@ module.exports.confirmRide = async (req, res) => {
     try {
         const ride = await rideService.confirmRide({ rideId, captain: req.captain });
 
-        console.log(`✅ Ride confirmed. Sending to user with OTP: ${ride.otp}`);
+        console.log(`Ride confirmed. Sending to user with OTP: ${ride.otp}`);
 
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-confirmed',
