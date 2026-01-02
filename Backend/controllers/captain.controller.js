@@ -1,6 +1,7 @@
 const captainModel = require('../models/captain.model');
 const captainService = require('../services/captain.service');
 const blackListTokenModel = require('../models/blacklistToken.model');
+const rideModel = require('../models/ride.model');
 const { validationResult } = require('express-validator');
 
 
@@ -68,6 +69,16 @@ module.exports.loginCaptain = async (req, res, next) => {
 
 module.exports.getCaptainProfile = async (req, res, next) => {
     res.status(200).json({ captain: req.captain });
+}
+
+module.exports.getCaptainStats = async (req, res) => {
+    const rides = await rideModel.find({ captain: req.captain._id, status: 'completed' });
+    const earnings = rides.reduce((acc, ride) => acc + ride.fare, 0);
+    const totalRides = rides.length;
+    const ratings = rides.filter(r => r.rating).map(r => r.rating);
+    const averageRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+
+    res.status(200).json({ earnings, totalRides, averageRating, recentRides: rides });
 }
 
 module.exports.logoutCaptain = async (req, res, next) => {

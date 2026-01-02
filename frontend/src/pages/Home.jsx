@@ -11,7 +11,7 @@ import WaitingForDriver from '../components/WaitingForDriver';
 import { SocketContext } from '../context/SocketContext';
 import { useContext } from 'react';
 import { UserDataContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import LiveTracking from '../components/LiveTracking';
 
 const Home = () => {
@@ -203,7 +203,10 @@ const Home = () => {
 
     return (
         <div className='h-screen relative overflow-hidden'>
-            <img className='w-16 absolute left-5 top-5' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+            <img className='w-16 absolute left-5 top-5 z-10' src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
+            <Link to='/user/trips' className='absolute right-5 top-5 h-10 w-10 bg-white flex items-center justify-center rounded-full shadow-md z-10'>
+                <i className="text-lg font-medium ri-history-line"></i>
+            </Link>
             <div className='h-screen w-screen'>
                 {/* image for temporary use  */}
                 <LiveTracking pickup={pickup} destination={destination} />

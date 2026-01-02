@@ -63,14 +63,16 @@ module.exports.createRide = async ({
 
     const fare = await getFare(pickup, destination);
 
-
+    const distanceTime = await mapService.getDistanceTime(pickup, destination);
 
     const ride = rideModel.create({
         user,
         pickup,
         destination,
         otp: getOtp(6),
-        fare: fare[ vehicleType ]
+        fare: fare[ vehicleType ],
+        distance: distanceTime.distance.value / 1000, // in km
+        duration: distanceTime.duration.value / 60 // in minutes
     })
 
     return ride;
@@ -155,6 +157,21 @@ module.exports.endRide = async ({ rideId, captain }) => {
     }, {
         status: 'completed'
     })
+
+    return ride;
+}
+
+module.exports.rateRide = async ({ rideId, rating, feedback }) => {
+    if (!rideId || !rating) {
+        throw new Error('Ride id and rating are required');
+    }
+
+    const ride = await rideModel.findOneAndUpdate({
+        _id: rideId
+    }, {
+        rating,
+        feedback
+    }, { new: true });
 
     return ride;
 }

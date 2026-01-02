@@ -22,6 +22,8 @@ router.post('/login', [
 
 router.get('/profile', authMiddleware.authUser, userController.getUserProfile)
 
+router.get('/trips', authMiddleware.authUser, userController.getUserTrips)
+
 router.get('/logout', authMiddleware.authUser, userController.logoutUser)
 
 

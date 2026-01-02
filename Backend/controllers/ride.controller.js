@@ -114,6 +114,9 @@ module.exports.startRide = async (req, res) => {
 
         return res.status(200).json(ride);
     } catch (err) {
+        if (err.message === 'Invalid OTP') {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
         return res.status(500).json({ message: err.message });
     }
 }
@@ -136,6 +139,22 @@ module.exports.endRide = async (req, res) => {
 
 
 
+        return res.status(200).json(ride);
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}
+
+module.exports.rateRide = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { rideId, rating, feedback } = req.body;
+
+    try {
+        const ride = await rideService.rateRide({ rideId, rating, feedback });
         return res.status(200).json(ride);
     } catch (err) {
         return res.status(500).json({ message: err.message });

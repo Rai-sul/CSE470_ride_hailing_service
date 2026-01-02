@@ -2,6 +2,7 @@ const userModel = require('../models/user.model');
 const userService = require('../services/user.service');
 const { validationResult } = require('express-validator');
 const blackListTokenModel = require('../models/blacklistToken.model');
+const rideModel = require('../models/ride.model');
 
 module.exports.registerUser = async (req, res, next) => {
 
@@ -66,6 +67,11 @@ module.exports.getUserProfile = async (req, res, next) => {
 
     res.status(200).json(req.user);
 
+}
+
+module.exports.getUserTrips = async (req, res) => {
+    const rides = await rideModel.find({ user: req.user._id, status: 'completed' }).populate('captain');
+    res.status(200).json(rides);
 }
 
 module.exports.logoutUser = async (req, res, next) => {

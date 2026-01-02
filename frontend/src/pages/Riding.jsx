@@ -1,18 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom' // Added useLocation
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { useNavigate } from 'react-router-dom'
 import LiveTracking from '../components/LiveTracking'
+import RateDriver from '../components/RateDriver'
 
 const Riding = () => {
     const location = useLocation()
     const { ride } = location.state || {} // Retrieve ride data
     const { socket } = useContext(SocketContext)
     const navigate = useNavigate()
+    const [ showRateDriver, setShowRateDriver ] = useState(false)
 
     socket.on("ride-ended", () => {
-        navigate('/home')
+        setShowRateDriver(true)
     })
 
 
@@ -56,6 +58,7 @@ const Riding = () => {
                 </div>
                 <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>Make a Payment</button>
             </div>
+            {showRateDriver && <RateDriver ride={ride} />}
         </div>
     )
 }

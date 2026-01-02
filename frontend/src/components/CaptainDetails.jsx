@@ -1,10 +1,33 @@
 
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CaptainDataContext } from '../context/CapatainContext'
+import axios from 'axios'
 
 const CaptainDetails = () => {
 
     const { captain } = useContext(CaptainDataContext)
+    const [ stats, setStats ] = useState({
+        earnings: 0,
+        totalRides: 0,
+        averageRating: 0,
+        recentRides: []
+    })
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/captains/stats`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+                setStats(response.data)
+            } catch (err) {
+                console.error(err)
+            }
+        }
+        fetchStats()
+    }, [])
 
     return (
         <div>
@@ -14,27 +37,26 @@ const CaptainDetails = () => {
                     <h4 className='text-lg font-medium capitalize'>{captain.fullname.firstname + " " + captain.fullname.lastname}</h4>
                 </div>
                 <div>
-                    <h4 className='text-xl font-semibold'>295.20 BDT</h4>
+                    <h4 className='text-xl font-semibold'>BDT {stats.earnings}</h4>
                     <p className='text-sm text-gray-600'>Earned</p>
                 </div>
             </div>
             <div className='flex p-3 mt-8 bg-gray-100 rounded-xl justify-center gap-5 items-start'>
                 <div className='text-center'>
                     <i className="text-3xl mb-2 font-thin ri-timer-2-line"></i>
-                    <h5 className='text-lg font-medium'>10.2</h5>
-                    <p className='text-sm text-gray-600'>Hours Online</p>
+                    <h5 className='text-lg font-medium'>{stats.totalRides}</h5>
+                    <p className='text-sm text-gray-600'>Total Rides</p>
                 </div>
                 <div className='text-center'>
-                    <i className="text-3xl mb-2 font-thin ri-speed-up-line"></i>
-                    <h5 className='text-lg font-medium'>10.2</h5>
-                    <p className='text-sm text-gray-600'>Hours Online</p>
+                    <i className="text-3xl mb-2 font-thin ri-star-line"></i>
+                    <h5 className='text-lg font-medium'>{stats.averageRating.toFixed(1)}</h5>
+                    <p className='text-sm text-gray-600'>Rating</p>
                 </div>
                 <div className='text-center'>
                     <i className="text-3xl mb-2 font-thin ri-booklet-line"></i>
                     <h5 className='text-lg font-medium'>10.2</h5>
                     <p className='text-sm text-gray-600'>Hours Online</p>
                 </div>
-
             </div>
         </div>
     )
