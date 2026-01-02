@@ -19,6 +19,7 @@ const LiveTracking = ({ pickup, destination }) => {
 
     useEffect(() => {
         if (map.current) return;
+        if (!mapContainer.current) return;
 
         const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
         
@@ -88,43 +89,19 @@ const LiveTracking = ({ pickup, destination }) => {
     }, []);
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
+        const updatePosition = (position) => {
             const { latitude, longitude } = position.coords;
             setCurrentPosition({
                 latitude,
                 longitude
-            });
-        });
-
-        const watchId = navigator.geolocation.watchPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-                latitude,
-                longitude
-            });
-        });
-
-        return () => navigator.geolocation.clearWatch(watchId);
-    }, []);
-
-    useEffect(() => {
-        const updatePosition = () => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-
-                console.log('Position updated:', latitude, longitude);
-                setCurrentPosition({
-                    latitude,
-                    longitude
-                });
             });
         };
 
-        updatePosition();
+        navigator.geolocation.getCurrentPosition(updatePosition);
 
-        const intervalId = setInterval(updatePosition, 1000);
+        const watchId = navigator.geolocation.watchPosition(updatePosition);
 
-        return () => clearInterval(intervalId);
+        return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
     useEffect(() => {
@@ -142,9 +119,14 @@ const LiveTracking = ({ pickup, destination }) => {
         if (!map.current || !pickup || !destination) return;
 
         const drawRoute = async () => {
+            const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+            if (!token || token.startsWith('sk.')) {
+                console.warn('Cannot draw route: Valid public Mapbox token required');
+                return;
+            }
+
             try {
                 // Get coordinates for pickup and destination
-                const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
                 const baseUrl = import.meta.env.VITE_BASE_URL;
 
                 // Get coordinates from backend
@@ -165,6 +147,10 @@ const LiveTracking = ({ pickup, destination }) => {
                 const directionsUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickupCoords.lng},${pickupCoords.lat};${destCoords.lng},${destCoords.lat}?geometries=geojson&access_token=${token}`;
                 
                 const routeRes = await axios.get(directionsUrl);
+                if (!routeRes.data || !routeRes.data.routes || routeRes.data.routes.length === 0) {
+                    console.error('No routes found');
+                    return;
+                }
                 const route = routeRes.data.routes[0].geometry;
 
                 // Remove existing route if any
