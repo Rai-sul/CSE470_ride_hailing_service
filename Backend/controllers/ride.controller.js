@@ -23,9 +23,13 @@ module.exports.createRide = async (req, res) => {
 
         const pickupCoordinates = await mapService.getAddressCoordinate(pickup);
 
+        const vehicleTypeMap = {
+            auto: 'auto',
+            car: 'car',
+            moto: 'motorcycle'
+        };
 
-
-        const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.lat, pickupCoordinates.lng, 10);
+        const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.lat, pickupCoordinates.lng, 10, vehicleTypeMap[vehicleType]);
 
         console.log(`Found ${captainsInRadius.length} active captains in radius`);
 

@@ -17,6 +17,7 @@ const CaptainSignup = () => {
   const [ vehiclePlate, setVehiclePlate ] = useState('')
   const [ vehicleCapacity, setVehicleCapacity ] = useState('')
   const [ vehicleType, setVehicleType ] = useState('')
+  const [ vehicleModel, setVehicleModel ] = useState('')
 
 
   const { captain, setCaptain } = React.useContext(CaptainDataContext)
@@ -35,7 +36,8 @@ const CaptainSignup = () => {
         color: vehicleColor,
         plate: vehiclePlate,
         capacity: vehicleCapacity,
-        vehicleType: vehicleType
+        vehicleType: vehicleType,
+        model: vehicleModel
       }
     }
 
@@ -61,6 +63,7 @@ const CaptainSignup = () => {
       setVehiclePlate('')
       setVehicleCapacity('')
       setVehicleType('')
+      setVehicleModel('')
     } catch (err) {
       console.error('Captain register error', err)
       alert(err?.response?.data?.message || 'Registration failed - check console')
@@ -70,8 +73,7 @@ const CaptainSignup = () => {
   return (
     <div className='py-5 px-5 h-screen flex flex-col justify-between'>
       <div>
-        <img className='w-20 mb-3' src="https://www.svgrepo.com/show/505031/uber-driver.svg" alt="" />
-
+        
         <form onSubmit={(e) => {
           submitHandler(e)
         }}>
@@ -130,12 +132,24 @@ const CaptainSignup = () => {
               required
               className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
               type="text"
+              placeholder='Vehicle Model'
+              value={vehicleModel}
+              onChange={(e) => {
+                setVehicleModel(e.target.value)
+              }}
+            />
+            <input
+              required
+              className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
+              type="text"
               placeholder='Vehicle Color'
               value={vehicleColor}
               onChange={(e) => {
                 setVehicleColor(e.target.value)
               }}
             />
+          </div>
+          <div className='flex gap-4 mb-7'>
             <input
               required
               className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
@@ -146,8 +160,6 @@ const CaptainSignup = () => {
                 setVehiclePlate(e.target.value)
               }}
             />
-          </div>
-          <div className='flex gap-4 mb-7'>
             <input
               required
               className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
@@ -158,9 +170,11 @@ const CaptainSignup = () => {
                 setVehicleCapacity(e.target.value)
               }}
             />
+          </div>
+          <div className='mb-7'>
             <select
               required
-              className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border text-lg placeholder:text-base'
+              className='bg-[#eeeeee] w-full rounded-lg px-4 py-2 border text-lg placeholder:text-base'
               value={vehicleType}
               onChange={(e) => {
                 setVehicleType(e.target.value)
@@ -169,7 +183,7 @@ const CaptainSignup = () => {
               <option value="" disabled>Select Vehicle Type</option>
               <option value="car">Car</option>
               <option value="auto">Auto</option>
-              <option value="moto">Moto</option>
+              <option value="motorcycle">Moto</option>
             </select>
           </div>
 

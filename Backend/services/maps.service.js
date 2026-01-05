@@ -82,7 +82,7 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
     }
 }
 
-module.exports.getCaptainsInTheRadius = async (lat, lng, radius) => {
+module.exports.getCaptainsInTheRadius = async (lat, lng, radius, vehicleType) => {
 
     // radius in km
     // MongoDB GeoJSON expects [longitude, latitude] order
@@ -93,7 +93,8 @@ module.exports.getCaptainsInTheRadius = async (lat, lng, radius) => {
                 $centerSphere: [ [ lng, lat ], radius / 6371 ]
             }
         },
-        status: 'active'
+        status: 'active',
+        'vehicle.vehicleType': vehicleType
     });
 
     return captains;

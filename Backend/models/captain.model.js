@@ -56,6 +56,11 @@ const captainSchema = new mongoose.Schema({
             type: String,
             required: true,
             enum: [ 'car', 'motorcycle', 'auto' ],
+        },
+        model: {
+            type: String,
+            required: true,
+            minlength: [ 3, 'Model must be at least 3 characters long' ],
         }
     },
 
